@@ -3,38 +3,29 @@
 #define INCLUDE_TREE_H_
 
 #include <vector>
-#include <memory>
 
-class Node {
+class PMTree {
  public:
-  explicit Node(char val);
-  char value;
-  std::vector<std::shared_ptr<Node>> children;
-};
+    struct Node {
+        char sym;
+        std::vector<Node*> links;
+        explicit Node(char s) : sym(s) {}
+    };
 
-class Tree {
- public:
-  explicit Tree(const std::vector<char>& elements);
-  ~Tree() = default;
+    Node* top;
+    std::vector<char> base;
 
-  std::shared_ptr<Node> getRoot() const;
-  std::vector<char> getOriginalElements() const;
+    explicit PMTree(const std::vector<char>& src);
+    ~PMTree();
 
  private:
-  std::shared_ptr<Node> root_;
-  std::vector<char> original_elements_;
-
-  void buildTree(std::shared_ptr<Node> node,
-                 std::vector<char> remaining_elements);
-  void getAllPermutationsDFS(std::shared_ptr<Node> node,
-                             std::vector<char>& current,
-                             std::vector<std::vector<char>>& result);
+    Node* generate(const std::vector<char>& rest);
+    void destroy(Node* ptr);
 };
 
-std::vector<std::vector<char>> getAllPerms(Tree& tree);
+std::vector<std::vector<char>> getAllPerms(PMTree& obj);
+std::vector<char> getPerm1(PMTree& obj, int pos);
+std::vector<char> getPerm2(PMTree& obj, int pos);
 
-std::vector<char> getPerm1(Tree& tree, int num);
-
-std::vector<char> getPerm2(Tree& tree, int num);
-
+size_t fact(int n);
 #endif  // INCLUDE_TREE_H_
